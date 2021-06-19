@@ -20,16 +20,8 @@ void SimpleEQ::prepareToPlay(double sampleRate, int samplesPerBlock)
     rightChain.prepare(spec);
 
     auto chainSettings = getChainSettings(apvts);
-
-    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(
-        sampleRate,
-        chainSettings.peakFreq,
-        chainSettings.peakQuality,
-        juce::Decibels::decibelsToGain(chainSettings.peakGainInDecibels));
-
-    *leftChain.get<ChainPositions::Peak>().coefficients = *peakCoefficients;
-    *rightChain.get<ChainPositions::Peak>().coefficients = *peakCoefficients;
-
+    updatePeakFilter(chainSettings);
+    
     auto cutCoefficients =
         juce::dsp::FilterDesign<float>::designIIRHighpassHighOrderButterworthMethod(
             chainSettings.lowCutFreq, sampleRate, 2 * (chainSettings.lowCutSlope + 1));
@@ -147,16 +139,8 @@ void SimpleEQ::processBlock(juce::AudioBuffer<float>& buffer,
         buffer.clear(i, 0, buffer.getNumSamples());
 
     auto chainSettings = getChainSettings(apvts);
-
-    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(
-        getSampleRate(),
-        chainSettings.peakFreq,
-        chainSettings.peakQuality,
-        juce::Decibels::decibelsToGain(chainSettings.peakGainInDecibels));
-
-    *leftChain.get<ChainPositions::Peak>().coefficients = *peakCoefficients;
-    *rightChain.get<ChainPositions::Peak>().coefficients = *peakCoefficients;
-
+    updatePeakFilter(chainSettings);
+    
     auto cutCoefficients =
         juce::dsp::FilterDesign<float>::designIIRHighpassHighOrderButterworthMethod(
             chainSettings.lowCutFreq,
@@ -281,6 +265,23 @@ void SimpleEQ::getStateInformation(juce::MemoryBlock& destData)
 void SimpleEQ::setStateInformation(const void* data, int sizeInBytes)
 {
     juce::ignoreUnused(data, sizeInBytes);
+}
+
+void SimpleEQ::updateCoefficients(Coefficients &old, const Coefficients &replacements) {
+    *old = *replacements;
+}
+
+void SimpleEQ::updatePeakFilter(const ChainSettings& chainSettings)
+{
+    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(
+        getSampleRate(),
+        chainSettings.peakFreq,
+        chainSettings.peakQuality,
+        juce::Decibels::decibelsToGain(chainSettings.peakGainInDecibels));
+
+    updateCoefficients(leftChain.get<ChainPositions::Peak>().coefficients,
+                       peakCoefficients);
+    updateCoefficients(rightChain.get<ChainPositions::Peak>().coefficients, peakCoefficients);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SimpleEQ::createParameterLayout()
