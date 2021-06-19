@@ -5,7 +5,7 @@
 class MinimalPluginEditor : public juce::AudioProcessorEditor
 {
 public:
-    explicit MinimalPluginEditor(MinimalAudioPlugin& processorToUse)
+    explicit MinimalPluginEditor(SimpleEQ& processorToUse)
         : juce::AudioProcessorEditor(processorToUse)
         , genericEditor(processorToUse)
     {
