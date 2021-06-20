@@ -2,18 +2,28 @@
 
 #include "PluginProcessor.h"
 
-class MinimalPluginEditor : public juce::AudioProcessorEditor
+struct CustomRotarySlider : juce::Slider
+{
+    CustomRotarySlider()
+        : juce::Slider(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag,
+                       juce::Slider::TextEntryBoxPosition::NoTextBox)
+    {
+    }
+};
+
+class SimpleEQEditor : public juce::AudioProcessorEditor
 {
 public:
-    explicit MinimalPluginEditor(SimpleEQ& processorToUse)
-        : juce::AudioProcessorEditor(processorToUse)
-        , genericEditor(processorToUse)
-    {
-        addAndMakeVisible(genericEditor);
-        setSize(400, 300);
-    }
+    SimpleEQEditor(SimpleEQ&);
+    ~SimpleEQEditor() override;
+    void resized() override;
 
-    void resized() override { genericEditor.setBounds(getLocalBounds()); }
+private:
+    SimpleEQ& audioProcessor;
+    CustomRotarySlider peakFreqSlider, peakGainSlider, peakQualitySlider,
+        lowCutFreqSlider, highCutFreqSlider, lowCutSlopeSlider, highCutSlopeSlider;
 
-    juce::GenericAudioProcessorEditor genericEditor;
+    std::vector<juce::Component*> getComps();
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SimpleEQEditor)
 };

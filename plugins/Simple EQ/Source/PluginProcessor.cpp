@@ -56,17 +56,23 @@ void SimpleEQ::processBlock(juce::AudioBuffer<float>& buffer,
 
 juce::AudioProcessorEditor* SimpleEQ::createEditor()
 {
-    return new MinimalPluginEditor(*this);
+    return new SimpleEQEditor(*this);
 }
 
 void SimpleEQ::getStateInformation(juce::MemoryBlock& destData)
 {
-    juce::ignoreUnused(destData);
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void SimpleEQ::setStateInformation(const void* data, int sizeInBytes)
 {
-    juce::ignoreUnused(data, sizeInBytes);
+    auto tree = juce::ValueTree::readFromData(data, size_t(sizeInBytes));
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+        updateFilters();
+    }
 }
 
 void SimpleEQ::updateCoefficients(Coefficients& old, const Coefficients& replacements)

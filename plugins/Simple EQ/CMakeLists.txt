@@ -19,7 +19,8 @@ juce_add_plugin("${BaseTargetName}"
         PRODUCT_NAME "Simple EQ")
 
 target_sources(${BaseTargetName} PRIVATE
-        Source/PluginProcessor.cpp)
+        Source/PluginProcessor.cpp
+        Source/PluginEditor.cpp)
 
 target_compile_definitions(${BaseTargetName}
         PUBLIC
