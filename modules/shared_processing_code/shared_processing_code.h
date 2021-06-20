@@ -5,7 +5,7 @@
 BEGIN_JUCE_MODULE_DECLARATION
 
       ID:               shared_processing_code
-      vendor:           Eyal Amir
+      vendor:           Janne Spijkervet
       version:          0.0.1
       name:             shared_processing_code
       description:      Shared processing functions

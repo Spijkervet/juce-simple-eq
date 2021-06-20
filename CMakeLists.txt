@@ -41,9 +41,8 @@ CPMAddPackage(
 option(BUILD_JUCE_PROTOTYPE_EXAMPES "Build JUCE prototype examples" ON)
 
 if (${BUILD_JUCE_PROTOTYPE_EXAMPES})
-    #adding any custom modules you might have:
     add_subdirectory(modules)
-
+    #adding any custom modules you might have:
     #adding project folders:
-    add_subdirectory(plugins)
+    add_subdirectory(plugin)
 endif()

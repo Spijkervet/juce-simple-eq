@@ -5,7 +5,7 @@
 BEGIN_JUCE_MODULE_DECLARATION
 
       ID:               shared_plugin_helpers
-      vendor:           Eyal Amir
+      vendor:           Janne Spijkervet
       version:          0.0.1
       name:             shared_plugin_helpers
       description:      Shared plugin helpers

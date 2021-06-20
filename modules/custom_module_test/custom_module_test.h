@@ -5,7 +5,7 @@
      BEGIN_JUCE_MODULE_DECLARATION
 
       ID:               custom_module_test
-      vendor:           Eyal Amir
+      vendor:           Janne Spijkervet
       version:          0.0.1
       name:             custom_module_test
       description:      custom_module_test
